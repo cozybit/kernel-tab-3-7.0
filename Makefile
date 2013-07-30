@@ -7,7 +7,8 @@
 log=@echo [$(shell date "+%Y-%m-%d %H:%M:%S")]
 
 MAKE_JOBS?=8
-KERNEL_TOOLCHAIN_PREFIX := /opt/toolchains/arm-eabi-4.6/bin/arm-eabi-
+# Change this variable if this path does not point to the right place
+KERNEL_TOOLCHAIN_PREFIX?= /home/guillermo/dev/mesh-injected-phones/prebuilt-tools/linux-x86/arm-eabi-4.6/bin/arm-eabi-
 KERNEL_CONFIG?=pxa986_lt02wifi_defconfig
 KERNEL_OUTDIR:= out
 
@@ -25,11 +26,12 @@ export KERNELDIR:=$(shell pwd)/common
 .PHONY:help
 help:
 	$(hide)echo "======================================="
-	$(hide)echo "= This file wraps the build of kernel and modules"
+	$(hide)echo "= This file wraps the build of kernel and modules."
 	$(hide)echo "= make all: to make  kernel, all modules. The kernel and modules will be output to 'out' directory."
-	$(hide)echo "= make kernel: only make the kernel. Using KERNEL_CONFIG variable to specify the kernel config file to be used. By default it is: $(KERNEL_CONFIG)"
+	$(hide)echo "= make kernel: only make the kernel. Using KERNEL_CONFIG variable to specify the kernel config file to be used. By default it is: $(KERNEL_CONFIG)."
 	$(hide)echo "= make modules: only make all the modules. The kernel should already be built. Otherwise building modules will fail."
-	$(hide)echo "= make clean: clean the kernel and modules"
+	$(hide)echo "= make clean: clean the kernel and modules."
+	$(hide)echo "= Verify that KERNEL_TOOLCHAIN_PREFIX points to a valid toolchain in your system."
 	$(hide)echo "======================================="
 
 all: kernel modules
@@ -44,7 +46,6 @@ menuconfig:
 .PHONY: kernel clean_kernel
 kernel:
 	$(log) "making kernel [$(KERNEL_CONFIG)]..."
-
 	$(hide)cd common && \
 	make $(KERNEL_CONFIG) && \
 	make -j$(MAKE_JOBS) && \
